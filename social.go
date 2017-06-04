@@ -66,7 +66,7 @@ func (this *SocialAuth) createState(ctx *context.Context, social SocialType) str
 
 	// save to session
 	name := this.getSessKey(social, "state")
-	err := ctx.Input.CruSession.Set(name, state)
+	ctx.Input.CruSession.Set(name, state)
 	return state
 }
 
