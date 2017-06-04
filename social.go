@@ -66,11 +66,7 @@ func (this *SocialAuth) createState(ctx *context.Context, social SocialType) str
 
 	// save to session
 	name := this.getSessKey(social, "state")
-	fmt.Println("name::",name)
-	fmt.Println("state::",state)
 	err := ctx.Input.CruSession.Set(name, state)
-	fmt.Println("err:::::::::::::::::",err)
-
 	return state
 }
 
@@ -96,14 +92,10 @@ func (this *SocialAuth) verifyState(ctx *context.Context, social SocialType) (st
 // Get provider according request path. ex: /login/: match /login/github
 func (this *SocialAuth) getProvider(ctx *context.Context) Provider {
 	path := ctx.Input.Param(":splat")
-	fmt.Println("5555555555555555",path)
-
 	p, ok := GetProviderByPath(path)
-	fmt.Println("pppp:",p,"ok::",ok)
 	if ok {
 		return p
 	}
-
 	return nil
 }
 
@@ -112,11 +104,8 @@ func (this *SocialAuth) ReadyConnect(ctx *context.Context) (SocialType, bool) {
 	var social SocialType
 
 	if s, _ := ctx.Input.CruSession.Get("social_connect").(int); s == 0 {
-		fmt.Println("AAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 		return 0, false
 	} else {
-		fmt.Println("BBBBBBBBBBBBBBBBBBBBBB")
-
 		social = SocialType(s)
 	}
 
@@ -129,18 +118,12 @@ func (this *SocialAuth) ReadyConnect(ctx *context.Context) (SocialType, bool) {
 
 // Redirect to other social platform
 func (this *SocialAuth) OAuthRedirect(ctx *context.Context) (redirect string, failedErr error) {
-	fmt.Println("333333333333333333333333333333333")
 	_, isLogin := this.app.IsUserLogin(ctx)
-	fmt.Println("4444444444444444444444444444444",isLogin)
-
-	fmt.Println("redirect:::::",redirect)
-	fmt.Println("failedErr:::::",failedErr)
 	defer func() {
 		if len(redirect) == 0 && failedErr != nil {
 			if isLogin {
 				redirect = this.ConnectFailedURL
 			} else {
-				fmt.Println("this.LoginURL:::",this.LoginURL)
 				redirect = this.LoginURL
 			}
 		}
@@ -298,7 +281,6 @@ func (this *SocialAuth) ConnectAndLogin(ctx *context.Context, socialType SocialT
 	}
 
 	identify, err := p.GetIndentify(tk.Token)
-	fmt.Println("tk.Token::::",tk.Token)
 	if err != nil {
 		return "", nil, err
 	}
